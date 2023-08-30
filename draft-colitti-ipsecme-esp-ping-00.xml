@@ -95,13 +95,14 @@ Operational experience suggests that networks and some home routers that drop ES
 
     <section anchor="protocol">
       <name>Protocol Specification</name>
-<t>An IPv6 node that desires to determine whether the path to a particular destination can support ESP packets can send an ESP Echo Request packet to that destination. ESP Echo Request packets are ESP packets with an SPI value of [ESP-ECHO-REQUEST], a Next Header value of 59 (No Next Header), and no payload.
-</t>
-<t>If the destination supports ESP, and wishes to reveal to the sender that it does so, it SHOULD reply with an ESP Echo Reply packet. ESP Echo Reply packets are ESP packets with an SPI value of [ESP-ECHO-REPLY], a Next Header value of 59, and no payload.
-</t>
 
+
+<t> An IPsec peer, prior to an IKE negotiation, intending to ascertain the path's capability to support ESP packets to a specific destination, MAY send an ESP Echo Request packet to such destination. The ESP Echo Request packets are distinguished as ESP packets with an SPI value set to [ESP-ECHO-REQUEST], a Next Header value of 59 (No Next Header), and devoid of any payload. </t>
+
+<t> Should the destination support ESP and intend to communicate this capability to the potential IPsec peer, it SHOULD respond with an ESP Echo Reply packet. These ESP Echo Reply packets are characterized as ESP packets with an SPI value set to [ESP-ECHO-REPLY], a Next Header value of 59, and are devoid of any payload.</t>
+
+<t>Upon completing an IKE negotiation, an IPsec peer wishing to ascertain the viability of the path for ESP packets MAY initiate an ESP Echo Request packet to the other peer. The ESP Echo Request packet MAY be encrypted. If encrypted, it SHOULD utilize an SPI value previously negotiated through IKE and set the Next Header value to 59 (No Next Header). The receiving IPsec peer, having established ESP through IKE, MAY issue an ESP Echo Response. When replying to an encrypted ESP Echo Request, the ESP Echo Response MUST be encrypted and utilize the corresponding negotiated SPI. </t>
     </section>
-
 
 
     <section anchor="Security">
