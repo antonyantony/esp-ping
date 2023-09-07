@@ -4,8 +4,8 @@
 
 IP Security Maintenance and Extensions                        L. Colitti
 Internet-Draft                                                    Google
-Intended status: Standards Track                            25 July 2023
-Expires: 26 January 2024
+Intended status: Standards Track                        7 September 2023
+Expires: 10 March 2024
 
 
                            ESP Echo Protocol
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 January 2024.
+   This Internet-Draft will expire on 10 March 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Colitti                  Expires 26 January 2024                [Page 1]
+Colitti                   Expires 10 March 2024                 [Page 1]
 
-Internet-Draft                  esp-ping                       July 2023
+Internet-Draft                  esp-ping                  September 2023
 
 
 Table of Contents
@@ -64,12 +64,12 @@ Table of Contents
    2.  Problem statement . . . . . . . . . . . . . . . . . . . . . .   2
    3.  Protocol Specification  . . . . . . . . . . . . . . . . . . .   3
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   4
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   4
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
 1.  Requirements Language
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Colitti                  Expires 26 January 2024                [Page 2]
+Colitti                   Expires 10 March 2024                 [Page 2]
 
-Internet-Draft                  esp-ping                       July 2023
+Internet-Draft                  esp-ping                  September 2023
 
 
    used after IKE negotiation, this failure mode is difficult to
@@ -127,16 +127,29 @@ Internet-Draft                  esp-ping                       July 2023
 
 3.  Protocol Specification
 
-   An IPv6 node that desires to determine whether the path to a
-   particular destination can support ESP packets can send an ESP Echo
-   Request packet to that destination.  ESP Echo Request packets are ESP
-   packets with an SPI value of [ESP-ECHO-REQUEST], a Next Header value
-   of 59 (No Next Header), and no payload.
+   An IPsec peer, prior to an IKE negotiation, intending to verify
+   network path's capability to support ESP packets to a specific
+   destination, MAY send an ESP Echo Request packet to such destination.
+   The ESP Echo Request packets are distinguished as ESP packets with an
+   SPI value set to [ESP-ECHO-REQUEST], a Next Header value of 59 (No
+   Next Header), and devoid of any payload.
 
-   If the destination supports ESP, and wishes to reveal to the sender
-   that it does so, it SHOULD reply with an ESP Echo Reply packet.  ESP
-   Echo Reply packets are ESP packets with an SPI value of [ESP-ECHO-
-   REPLY], a Next Header value of 59, and no payload.
+   Should the destination support ESP and intend to communicate this
+   capability to the potential IPsec peer, it SHOULD respond with an ESP
+   Echo Reply packet.  These ESP Echo Reply packets are characterized as
+   ESP packets with an SPI value set to [ESP-ECHO-REPLY], a Next Header
+   value of 59, and are devoid of any payload.  The Echo request and
+   response messages are not encrypted nor integerity proterctd.
+
+   After completing an IPsec SA negotiation, [RFC7296], an IPsec peer
+   wishing to verify the viability of the current network path for ESP
+   packets MAY initiate an ESP Echo Request.  The ESP Echo Request
+   packet MAY be encrypted.  If encrypted, it SHOULD utilize an SPI
+   value previously negotiated through IKE and set the Next Header value
+   to 59 (No Next Header).  The receiving IPsec peer, having established
+   ESP through IKE, MAY issue an ESP Echo Response.  When replying to an
+   encrypted ESP Echo Request, the ESP Echo Response MUST be encrypted
+   and utilize the corresponding negotiated SPI.
 
 4.  Security Considerations
 
@@ -150,6 +163,13 @@ Internet-Draft                  esp-ping                       July 2023
       can be prevented by implementing ingress filtering per BCP 38
       [RFC2827].
 
+
+
+Colitti                   Expires 10 March 2024                 [Page 3]
+
+Internet-Draft                  esp-ping                  September 2023
+
+
    *  An attacker can use ESP Echo Request packets to determine whether
       a particular destination address is an ESP endpoint.  This is not
       a new attack because any endpoint that supports ESP must also
@@ -160,15 +180,6 @@ Internet-Draft                  esp-ping                       July 2023
    This memo requests that IANA allocate two new values from the
    "Security Parameters Index (SPI)" registry.  The following entry
    should be appended:
-
-
-
-
-
-Colitti                  Expires 26 January 2024                [Page 3]
-
-Internet-Draft                  esp-ping                       July 2023
-
 
               +========+==================+=================+
               | Number | Description      | Reference       |
@@ -208,6 +219,18 @@ Internet-Draft                  esp-ping                       July 2023
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+Colitti                   Expires 10 March 2024                 [Page 4]
+
+Internet-Draft                  esp-ping                  September 2023
+
+
+   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
+              Kivinen, "Internet Key Exchange Protocol Version 2
+              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
+              2014, <https://www.rfc-editor.org/info/rfc7296>.
+
 6.2.  Informative References
 
 Acknowledgements
@@ -216,15 +239,6 @@ Acknowledgements
    Wouters for helpful discussion and suggestions.
 
 Author's Address
-
-
-
-
-
-Colitti                  Expires 26 January 2024                [Page 4]
-
-Internet-Draft                  esp-ping                       July 2023
-
 
    Lorenzo Colitti
    Google
@@ -263,18 +277,4 @@ Internet-Draft                  esp-ping                       July 2023
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Colitti                  Expires 26 January 2024                [Page 5]
+Colitti                   Expires 10 March 2024                 [Page 5]

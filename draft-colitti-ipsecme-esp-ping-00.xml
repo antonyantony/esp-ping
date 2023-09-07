@@ -37,7 +37,7 @@
       </address>
     </author>
 
-   
+
     <date year="2023"/>
 <area>Internet</area>
     <workgroup>IP Security Maintenance and Extensions</workgroup>
@@ -51,7 +51,7 @@
 This document defines an ESP echo function which can be used to detect whether a given network path supports IPv6 ESP packets.
 </t>
     </abstract>
- 
+
   </front>
 
   <middle>
@@ -65,7 +65,7 @@ This document defines an ESP echo function which can be used to detect whether a
           <xref target="RFC8174"/> when, and only when, they appear in
           all capitals, as shown here.</t>
       </section>
-    
+
     <section>
       <name>Problem statement</name>
 <t>
@@ -95,15 +95,12 @@ Operational experience suggests that networks and some home routers that drop ES
 
     <section anchor="protocol">
       <name>Protocol Specification</name>
+<t> An IPsec peer, prior to an IKE negotiation, intending to verify network path's capability to support ESP packets to a specific destination, MAY send an ESP Echo Request packet to such destination. The ESP Echo Request packets are distinguished as ESP packets with an SPI value set to [ESP-ECHO-REQUEST], a Next Header value of 59 (No Next Header), and devoid of any payload. </t>
 
+<t> Should the destination support ESP and intend to communicate this capability to the potential IPsec peer, it SHOULD respond with an ESP Echo Reply packet. These ESP Echo Reply packets are characterized as ESP packets with an SPI value set to [ESP-ECHO-REPLY], a Next Header value of 59, and are devoid of any payload. The Echo request and response messages are not encrypted nor integerity proterctd.</t>
 
-<t> An IPsec peer, prior to an IKE negotiation, intending to ascertain the path's capability to support ESP packets to a specific destination, MAY send an ESP Echo Request packet to such destination. The ESP Echo Request packets are distinguished as ESP packets with an SPI value set to [ESP-ECHO-REQUEST], a Next Header value of 59 (No Next Header), and devoid of any payload. </t>
-
-<t> Should the destination support ESP and intend to communicate this capability to the potential IPsec peer, it SHOULD respond with an ESP Echo Reply packet. These ESP Echo Reply packets are characterized as ESP packets with an SPI value set to [ESP-ECHO-REPLY], a Next Header value of 59, and are devoid of any payload.</t>
-
-<t>Upon completing an IKE negotiation, an IPsec peer wishing to ascertain the viability of the path for ESP packets MAY initiate an ESP Echo Request packet to the other peer. The ESP Echo Request packet MAY be encrypted. If encrypted, it SHOULD utilize an SPI value previously negotiated through IKE and set the Next Header value to 59 (No Next Header). The receiving IPsec peer, having established ESP through IKE, MAY issue an ESP Echo Response. When replying to an encrypted ESP Echo Request, the ESP Echo Response MUST be encrypted and utilize the corresponding negotiated SPI. </t>
+<t>After completing an IPsec SA negotiation, <xref target="RFC7296"/>, an IPsec peer wishing to verify the viability of the current network path for ESP packets MAY initiate an ESP Echo Request. The ESP Echo Request packet MAY be encrypted. If encrypted, it SHOULD utilize an SPI value previously negotiated through IKE and set the Next Header value to 59 (No Next Header). The receiving IPsec peer, having established ESP through IKE, MAY issue an ESP Echo Response. When replying to an encrypted ESP Echo Request, the ESP Echo Response MUST be encrypted and utilize the corresponding negotiated SPI.</t>
     </section>
-
 
     <section anchor="Security">
       <!-- All drafts are required to have a security considerations section. See RFC 3552 for a guide. -->
@@ -114,7 +111,7 @@ Operational experience suggests that networks and some home routers that drop ES
 <li>An attacker can use ESP Echo Request packets to determine whether a particular destination address is an ESP endpoint. This is not a new attack because any endpoint that supports ESP must also reply to IKE INIT packets.</li>
 </ul>
     </section>
-    
+
     <section anchor="IANA">
     <!-- All drafts are required to have an IANA considerations section. See RFC 8126 for a guide.-->
       <name>IANA Considerations</name>
@@ -129,7 +126,7 @@ Operational experience suggests that networks and some home routers that drop ES
         </tbody>
       </table>
     </section>
-    
+
     <!-- NOTE: The Acknowledgements and Contributors sections are at the end of this template -->
   </middle>
 
@@ -138,27 +135,28 @@ Operational experience suggests that networks and some home routers that drop ES
       <name>References</name>
       <references>
         <name>Normative References</name>
-        
+
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2827.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4555.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6092.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7296.xml"/>
         <!-- The recommended and simplest way to include a well known reference -->
-        
+
       </references>
- 
+
       <references>
 	      <name>Informative References</name>
       </references>
     </references>
-    
+
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
 <t>
 Thanks to Tero Kivinen, Steffen Klassert, Andrew McGregor, and Paul Wouters for helpful discussion and suggestions.
 </t>
     </section>
-    
+
  </back>
 </rfc>
